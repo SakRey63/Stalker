@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMover : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _rotationSpeed = 540f;
@@ -19,35 +19,19 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 _currentMoveInput = Vector3.zero;
 
-    void Start()
+    private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        _cameraRotationX = _cameraTransform.localEulerAngles.x;
+        InitializeCursor();
+        InitializeCameraRotation();
     }
 
-    void Update()
+    private void Update()
     {
-        _isGrounded = _controller.isGrounded;
-
-        if (_isGrounded && _velocity.y < 0)
-        {
-            _velocity.y = _stickToGroundForce;
-        }
-
-        Vector3 moveInput = _currentMoveInput;
-        Vector3 moveDirection = new Vector3(moveInput.x, 0f, moveInput.z).normalized;
-        Vector3 forwardMove = _cameraTransform.forward * moveDirection.z;
-        Vector3 rightMove = _cameraTransform.right * moveDirection.x;
-        Vector3 movement = (forwardMove + rightMove).normalized * _moveSpeed * Time.deltaTime;
-        movement.y = _velocity.y * Time.deltaTime;
-
-        _controller.Move(movement);
-
-        _velocity.y += _gravity * Time.deltaTime;
+        CheckGrounded();
+        ApplyGravity();
+        MovePlayer();
     }
-
+    
     public void Jump()
     {
         if (_isGrounded)
@@ -74,7 +58,50 @@ public class PlayerMovement : MonoBehaviour
         _cameraTransform.localEulerAngles = new Vector3(_cameraRotationX, _cameraTransform.localEulerAngles.y, 0f);
     }
 
+    private void InitializeCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private void InitializeCameraRotation()
+    {
+        _cameraRotationX = _cameraTransform.localEulerAngles.x;
+    }
+
+    private void CheckGrounded()
+    {
+        _isGrounded = _controller.isGrounded;
+
+        if (_isGrounded && _velocity.y < 0)
+        {
+            _velocity.y = _stickToGroundForce;
+        }
+    }
+
+    private void ApplyGravity()
+    {
+        _velocity.y += _gravity * Time.deltaTime;
+    }
+
+    private void MovePlayer()
+    {
+        Vector3 moveInput = _currentMoveInput;
+        Vector3 moveDirection = new Vector3(moveInput.x, 0f, moveInput.z).normalized;
+        Vector3 forwardMove = _cameraTransform.forward * moveDirection.z;
+        Vector3 rightMove = _cameraTransform.right * moveDirection.x;
+        Vector3 movement = (forwardMove + rightMove).normalized * _moveSpeed * Time.deltaTime;
+        movement.y = _velocity.y * Time.deltaTime;
+
+        _controller.Move(movement);
+    }
+
     private void OnApplicationFocus(bool hasFocus)
+    {
+        HandleApplicationFocus(hasFocus);
+    }
+
+    private void HandleApplicationFocus(bool hasFocus)
     {
         if (!hasFocus)
         {

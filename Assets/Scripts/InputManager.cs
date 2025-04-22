@@ -16,9 +16,16 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
+        ProcessMoveInput();
+        ProcessJumpInput();
+        ProcessMouseInput();
+    }
+    
+    private void ProcessMoveInput()
+    {
         float horizontalInput = Input.GetAxis(HorizontalAxis);
         float verticalInput = Input.GetAxis(VerticalAxis);
-        
+
         Vector3 moveInput = new Vector3(horizontalInput, 0f, verticalInput).normalized;
 
         if (moveInput.magnitude > 0)
@@ -29,18 +36,22 @@ public class PlayerInput : MonoBehaviour
         {
             OnMoveInput?.Invoke(Vector3.zero);
         }
+    }
 
+    private void ProcessJumpInput()
+    {
         if (Input.GetButtonDown(JumpButton))
         {
             OnJumpButtonPressed?.Invoke();
         }
+    }
 
+    private void ProcessMouseInput()
+    {
         float mouseXInput = Input.GetAxis(MouseXAxis);
-        
         OnMouseXInput?.Invoke(mouseXInput);
 
         float mouseYInput = Input.GetAxis(MouseYAxis);
-        
         OnMouseYInput?.Invoke(mouseYInput);
     }
 }

@@ -2256,7 +2256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerInput: {fileID: 1132989504}
-  _playerMovement: {fileID: 1228659087}
+  playerMover: {fileID: 1228659087}
 --- !u!4 &1132989506
 Transform:
   m_ObjectHideFlags: 0
@@ -2645,7 +2645,7 @@ MonoBehaviour:
   _moveSpeed: 3
   _stoppingDistance: 2
   _target: {fileID: 1228659085}
-  _rb: {fileID: 1379378591}
+  _rigidbody: {fileID: 1379378591}
   _maxVerticalSpeed: 5
   _gravityScale: 1
   _groundCheckDistance: 0.1

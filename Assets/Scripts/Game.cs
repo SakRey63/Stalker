@@ -1,28 +1,29 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Game : MonoBehaviour
 {
     [SerializeField] private PlayerInput _playerInput;
-    [SerializeField] private PlayerMovement _playerMovement;
+    [FormerlySerializedAs("_playerMovement")] [SerializeField] private PlayerMover playerMover;
 
     private void OnEnable()
     {
-        _playerInput.OnMoveInput += _playerMovement.HandleMoveInput;
+        _playerInput.OnMoveInput += playerMover.HandleMoveInput;
         _playerInput.OnJumpButtonPressed += CallJumpOnPlayerMovement;
-        _playerInput.OnMouseXInput += _playerMovement.HandleMouseXInput;
-        _playerInput.OnMouseYInput += _playerMovement.HandleMouseYInput;
+        _playerInput.OnMouseXInput += playerMover.HandleMouseXInput;
+        _playerInput.OnMouseYInput += playerMover.HandleMouseYInput;
     }
 
     private void OnDisable()
     {
-        _playerInput.OnMoveInput -= _playerMovement.HandleMoveInput;
+        _playerInput.OnMoveInput -= playerMover.HandleMoveInput;
         _playerInput.OnJumpButtonPressed -= CallJumpOnPlayerMovement;
-        _playerInput.OnMouseXInput -= _playerMovement.HandleMouseXInput;
-        _playerInput.OnMouseYInput -= _playerMovement.HandleMouseYInput;
+        _playerInput.OnMouseXInput -= playerMover.HandleMouseXInput;
+        _playerInput.OnMouseYInput -= playerMover.HandleMouseYInput;
     }
 
     private void CallJumpOnPlayerMovement()
     {
-        _playerMovement.Jump();
+        playerMover.Jump();
     }
 }
